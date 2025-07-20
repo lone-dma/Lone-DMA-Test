@@ -1,0 +1,73 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>LoneDMATest</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>warnings</Nullable>
+    <Platforms>x64</Platforms>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	<Deterministic>False</Deterministic>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	  
+	<PublishAot>true</PublishAot>
+	<HighEntropyVA>true</HighEntropyVA>
+	<OptimizationPreference>Speed</OptimizationPreference>
+	<CetCompat>false</CetCompat>
+	<DebuggerSupport>false</DebuggerSupport>
+	<StackTraceSupport>false</StackTraceSupport>
+	<AssemblyName>$(MSBuildProjectName)</AssemblyName>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="dbghelp.dll" />
+    <None Remove="FTD3XX.dll" />
+    <None Remove="leechcore.dll" />
+    <None Remove="leechcore_driver.dll" />
+    <None Remove="symsrv.dll" />
+    <None Remove="tinylz4.dll" />
+    <None Remove="vcruntime140.dll" />
+    <None Remove="vmm.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="dbghelp.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FTD3XX.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="leechcore.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="leechcore_driver.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="symsrv.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="tinylz4.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="vcruntime140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="vmm.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="VmmSharp" Version="5.14.9" />
+  </ItemGroup>
+	
+</Project>

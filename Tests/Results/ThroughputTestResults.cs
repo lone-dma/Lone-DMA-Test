@@ -1,0 +1,63 @@
+﻿namespace LoneDMATest.Tests.Results
+{
+    public readonly struct ThroughputTestResults
+    {
+        private readonly long _count;
+        private readonly long _failed;
+        private readonly TimeSpan _testDuration;
+
+        public readonly long Success => _count - _failed;
+        public readonly float PercentFailed => ((float)_failed / (float)_count) * 100f;
+
+        public readonly TestResult Result
+        {
+            get
+            {
+                TestResult result;
+                if (PercentFailed > 0f)
+                    result = TestResult.FAIL;
+                else if (Throughput >= 600f)
+                    result = TestResult.PERFECT;
+                else if (Throughput >= 200f)
+                    result = TestResult.EXCELLENT;
+                else if (Throughput >= 150f)
+                    result = TestResult.GOOD;
+                else if (Throughput >= 100f)
+                    result = TestResult.ACCEPTABLE;
+                else
+                    result = TestResult.FAIL;
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Throughput in MB.
+        /// </summary>
+        public readonly float Throughput
+        {
+            get
+            {
+                ulong bytesRead = (ulong)Success * ThroughputTest.BytesPerRead;
+                var mbRead = (int)(((double)bytesRead / 1024d) / 1024d);
+                return (float)((float)mbRead / _testDuration.TotalSeconds);
+            }
+        }
+
+        public ThroughputTestResults(long count, long failed, TimeSpan testDuration)
+        {
+            _count = count;
+            _failed = failed;
+            _testDuration = testDuration;
+        }
+
+        public readonly void Print()
+        {
+            Console.WriteLine();
+            ConsoleWriteLine($"== Throughput Test Results (16MB Reads) ==\n" +
+                $"Total Read Throughput: {Throughput.ToString("n2")} MB/s\n" +
+                $"Total Reads: {_count.ToString("n0")}\n" +
+                $"Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n", ConsoleColor.Cyan);
+            Result.Print();
+        }
+    }
+}
