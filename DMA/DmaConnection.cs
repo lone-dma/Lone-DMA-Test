@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using Vmmsharp;
+using VmmSharpEx;
 
 namespace LoneDMATest.DMA
 {
@@ -30,8 +30,6 @@ namespace LoneDMATest.DMA
                 algo is FpgaAlgo.Auto ?
                     "fpga" : $"fpga://algo={(int)algo}",
                 "-norefresh",
-                "-disable-python",
-                "-disable-yara",
                 "-waitinitialize"};
             var loggingLevel = Options.LoggingLevel;
             if (loggingLevel is not FpgaLoggingLevel.None)

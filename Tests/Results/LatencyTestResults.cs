@@ -26,7 +26,7 @@
                     result = TestResult.PERFECT;
                 else if (TotalLatency >= 6000)
                     result = TestResult.EXCELLENT;
-                else if (TotalLatency >= 4500)
+                else if (TotalLatency >= 4000)
                     result = TestResult.GOOD;
                 else if (TotalLatency >= 3000)
                     result = TestResult.ACCEPTABLE;

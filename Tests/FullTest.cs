@@ -1,6 +1,6 @@
 ﻿using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
-using Vmmsharp;
+using VmmSharpEx;
 
 namespace LoneDMATest.Tests
 {
@@ -34,7 +34,7 @@ namespace LoneDMATest.Tests
         {
             const string processTarget = "smss.exe";
             ConsoleWriteLine($"[i] Attempting to locate process {processTarget}...", ConsoleColor.Cyan);
-            if (dma.Vmm.Process(processTarget) is not VmmProcess proc)
+            if (dma.Vmm.GetProcessByName(processTarget) is not VmmProcess proc)
                 throw new Exception($"Unable to locate process {processTarget}!");
             ConsoleWriteLine($"[i] Process {processTarget} running @ PID {proc.PID}", ConsoleColor.Green);
             ConsoleWriteLine($"[i] Attempting to enumerate process modules...", ConsoleColor.Cyan);
