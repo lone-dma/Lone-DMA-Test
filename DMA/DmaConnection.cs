@@ -8,13 +8,13 @@ namespace LoneDMATest.DMA
     {
         private static readonly string _vmmVersion;
         private static readonly string _leechcoreVersion;
-        private readonly Vmm _hVMM;
+        private readonly Vmm _vmm;
         private PMemPageEntry[] _paPages;
 
         /// <summary>
         /// Vmm Handle for this connection instance.
         /// </summary>
-        public Vmm Vmm => _hVMM;
+        public Vmm Vmm => _vmm;
 
         static DmaConnection()
         {
@@ -49,7 +49,10 @@ namespace LoneDMATest.DMA
             }
             ConsoleWriteLine($"[i] Vmm Version: {_vmmVersion}\n" +
                 $"[i] Leechcore Version: {_leechcoreVersion}", ConsoleColor.Cyan);
-            _hVMM = new Vmm(args);
+            _vmm = new Vmm(args)
+            {
+                EnableMemoryWriting = false
+            };
             ConsoleWriteLine("[OK] DMA Initialization", ConsoleColor.Black, ConsoleColor.Green);
         }
 
@@ -59,7 +62,7 @@ namespace LoneDMATest.DMA
         public void GetMemoryMap()
         {
             ConsoleWriteLine("[i] Retrieving Physical Memory Map...", ConsoleColor.Cyan);
-            var map = _hVMM.MapMemory();
+            var map = _vmm.MapMemory();
             if (map.Length == 0)
                 throw new Exception("Failed to retrieve Physical Memory Map!");
             // Set the physical memory pages.
@@ -114,7 +117,7 @@ namespace LoneDMATest.DMA
         {
             if (_disposed)
                 return;
-            _hVMM.Dispose();
+            _vmm.Dispose();
             _disposed = true;
         }
         #endregion
