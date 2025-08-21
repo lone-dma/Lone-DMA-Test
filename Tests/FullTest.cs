@@ -34,13 +34,13 @@ namespace LoneDMATest.Tests
         {
             const string processTarget = "smss.exe";
             ConsoleWriteLine($"[i] Attempting to locate process {processTarget}...", ConsoleColor.Cyan);
-            if (dma.Vmm.GetProcessByName(processTarget) is not VmmProcess proc)
-                throw new Exception($"Unable to locate process {processTarget}!");
-            ConsoleWriteLine($"[i] Process {processTarget} running @ PID {proc.PID}", ConsoleColor.Green);
+            if (!dma.Vmm.PidGetFromName(processTarget, out uint pid))
+                throw new InvalidOperationException($"Unable to locate process {processTarget}!");
+            ConsoleWriteLine($"[i] Process {processTarget} running @ PID {pid}", ConsoleColor.Green);
             ConsoleWriteLine($"[i] Attempting to enumerate process modules...", ConsoleColor.Cyan);
-            var modules = proc.MapModule(false);
+            var modules = dma.Vmm.Map_GetModule(pid, false);
             if (modules.Length == 0)
-                throw new Exception($"No Modules located for {processTarget}!");
+                throw new InvalidOperationException($"No Modules located for {processTarget}!");
             foreach (var module in modules)
                 ConsoleWriteLine($"[i] {module.sText} @ 0x{module.vaBase.ToString("x")}", ConsoleColor.Green);
             ConsoleWriteLine("[OK] Process Lookup", ConsoleColor.Black, ConsoleColor.Green);

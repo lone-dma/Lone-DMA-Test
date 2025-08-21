@@ -62,9 +62,9 @@ namespace LoneDMATest.DMA
         public void GetMemoryMap()
         {
             ConsoleWriteLine("[i] Retrieving Physical Memory Map...", ConsoleColor.Cyan);
-            var map = _vmm.MapMemory();
+            var map = _vmm.Map_GetPhysMem();
             if (map.Length == 0)
-                throw new Exception("Failed to retrieve Physical Memory Map!");
+                throw new InvalidOperationException("Failed to retrieve Physical Memory Map!");
             // Set the physical memory pages.
             var paList = new List<PMemPageEntry>();
             foreach (var pMapEntry in map)
