@@ -57,6 +57,10 @@
                 $"Total Read Throughput: {Throughput.ToString("n2")} MB/s\n" +
                 $"Total Reads: {_count.ToString("n0")}\n" +
                 $"Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n", ConsoleColor.Cyan);
+            if (Throughput < 45f)
+            {
+                ConsoleWriteLine("[WARNING] Throughput indicates USB 2.0 Connection. Check port/cable/connection for issues.", ConsoleColor.Black, ConsoleColor.Yellow);
+            }
             Result.Print();
         }
     }

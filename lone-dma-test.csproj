@@ -29,7 +29,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VmmSharpEx" Version="2.2.9364.197" />
+    <PackageReference Include="VmmSharpEx" Version="2.2.9364.268" />
   </ItemGroup>
 	
 </Project>

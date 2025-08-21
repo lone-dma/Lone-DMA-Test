@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using VmmSharpEx;
+using VmmSharpEx.Options;
 
 namespace LoneDMATest.DMA
 {
@@ -41,11 +42,11 @@ namespace LoneDMATest.DMA
                 string[] loggingArgs = { "-printf", verbosity };
                 args = args.Concat(loggingArgs).ToArray();
             }
-            if (File.Exists("mmap.txt"))
+            bool mmap = File.Exists("mmap.txt");
+            if (mmap)
             {
                 string[] mapArgs = { "-memmap", "mmap.txt" };
                 args = args.Concat(mapArgs).ToArray();
-                ConsoleWriteLine("[WARNING] Loading Memory Map (mmap.txt)", ConsoleColor.Black, ConsoleColor.Yellow);
             }
             ConsoleWriteLine($"[i] Vmm Version: {_vmmVersion}\n" +
                 $"[i] Leechcore Version: {_leechcoreVersion}", ConsoleColor.Cyan);
@@ -53,6 +54,14 @@ namespace LoneDMATest.DMA
             {
                 EnableMemoryWriting = false
             };
+            if (mmap)
+            {
+                _vmm.Log("WARNING: Memory Map Loaded", Vmm.LogLevel.Warning);
+            }
+            if (_vmm.LeechCore.GetOption(LcOption.FPGA_ALGO_TINY) is ulong tiny && tiny != 0)
+            {
+                _vmm.Log("WARNING: TINY PCIe TLP algo auto-selected!", Vmm.LogLevel.Warning);
+            }
             ConsoleWriteLine("[OK] DMA Initialization", ConsoleColor.Black, ConsoleColor.Green);
         }
 
