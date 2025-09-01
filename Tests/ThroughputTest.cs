@@ -30,7 +30,6 @@ namespace LoneDMATest.Tests
         /// Run a throughput test.
         /// </summary>
         /// <param name="dma">DMA Connection instance.</param>
-        /// <param name="nPages">Number of pages to read.</param>
         /// <returns>Test results.</returns>
         public static ThroughputTestResults Run(DmaConnection dma, TimeSpan testDuration)
         {

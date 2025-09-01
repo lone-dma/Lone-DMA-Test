@@ -12,11 +12,8 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  
 	<PublishAot>true</PublishAot>
-	<HighEntropyVA>true</HighEntropyVA>
 	<OptimizationPreference>Speed</OptimizationPreference>
 	<CetCompat>false</CetCompat>
-	<DebuggerSupport>false</DebuggerSupport>
-	<StackTraceSupport>false</StackTraceSupport>
 	<AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
@@ -25,11 +22,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <DebugType>none</DebugType>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VmmSharpEx" Version="2.2.9364.268" />
+    <PackageReference Include="VmmSharpEx" Version="2.5.9375.42" />
   </ItemGroup>
 	
 </Project>

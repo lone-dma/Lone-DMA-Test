@@ -75,7 +75,6 @@ namespace LoneDMATest
             }
             finally
             {
-                GC.Collect(); // GC After Each Test
                 ConsolePause();
             }
         }
@@ -87,7 +86,7 @@ namespace LoneDMATest
                 Console.OutputEncoding = Encoding.Unicode;
                 mutex = new Mutex(true, _mutexID, out bool singleton);
                 if (!singleton)
-                    throw new ApplicationException("This Application is already running!");
+                    throw new InvalidOperationException("This Application is already running!");
                 PerformanceInterop.SetHighPerformanceMode();
                 VerifyDependencies();
             }
