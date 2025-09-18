@@ -6,7 +6,7 @@ using LoneDMATest.Tests;
 using System.Reflection;
 using System.Text;
 
-[assembly: AssemblyVersion("2.7.*")]
+[assembly: AssemblyVersion("2.8.*")]
 [assembly: AssemblyTitle(Program.Name)]
 [assembly: AssemblyProduct(Program.Name)]
 [assembly: AssemblyCopyright("©2025 Lone")]

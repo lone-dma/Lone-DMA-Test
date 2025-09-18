@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>LoneDMATest</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>warnings</Nullable>
@@ -26,7 +26,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VmmSharpEx" Version="3.50.9389.878" />
+    <PackageReference Include="VmmSharpEx" Version="3.50.9391.809" />
   </ItemGroup>
 	
 </Project>
