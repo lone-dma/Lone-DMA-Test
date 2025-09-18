@@ -78,8 +78,7 @@ namespace LoneDMATest.DMA
             var paList = new List<PMemPageEntry>();
             foreach (var pMapEntry in map)
             {
-                ulong cbToEnd = pMapEntry.cb;
-                for (ulong p = pMapEntry.pa;
+                for (ulong p = pMapEntry.pa, cbToEnd = pMapEntry.cb;
                     cbToEnd > 0x1000;
                     p += 0x1000, cbToEnd -= 0x1000)
                 {
