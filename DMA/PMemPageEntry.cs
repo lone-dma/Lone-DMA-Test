@@ -5,7 +5,7 @@
     /// </summary>
     public readonly struct PMemPageEntry
     {
-        public ulong PageBase { get; init; }
-        public ulong RemainingBytesInSection { get; init; }
+        public readonly ulong PageBase { get; init; }
+        public readonly ulong RemainingBytesInSection { get; init; }
     }
 }
