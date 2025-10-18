@@ -26,7 +26,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="VmmSharpEx" Version="3.60.9411.1229" />
+    <PackageReference Include="Spectre.Console" Version="0.52.0" />
+    <PackageReference Include="VmmSharpEx" Version="3.80.9422.367" />
   </ItemGroup>
 	
 </Project>

@@ -1,4 +1,6 @@
-﻿namespace LoneDMATest.Tests.Results
+﻿using Spectre.Console;
+
+namespace LoneDMATest.Tests.Results
 {
     public enum TestResult
     {
@@ -32,29 +34,28 @@
         /// <param name="testResult">Test result.</param>
         public static void Print(this TestResult testResult)
         {
-            ConsoleWrite("[i] Test Result: ", ConsoleColor.Cyan);
+            AnsiConsole.Markup("[cyan][[i]] Test Result: [/]");
             string result = testResult.ToString();
             switch (testResult)
             {
                 case TestResult.FAIL:
-                    ConsoleWrite(result, ConsoleColor.Black, ConsoleColor.Red);
+                    AnsiConsole.MarkupLine("[black on red]FAIL[/]");
                     break;
                 case TestResult.ACCEPTABLE:
-                    ConsoleWrite(result, ConsoleColor.Black, ConsoleColor.DarkYellow);
+                    AnsiConsole.MarkupLine("[black on yellow]ACCEPTABLE[/]");
                     break;
                 case TestResult.GOOD:
-                    ConsoleWrite(result, ConsoleColor.Black, ConsoleColor.DarkGreen);
+                    AnsiConsole.MarkupLine("[black on green]GOOD[/]");
                     break;
                 case TestResult.EXCELLENT:
-                    ConsoleWrite(result, ConsoleColor.Black, ConsoleColor.Green);
+                    AnsiConsole.MarkupLine("[black on green]EXCELLENT[/]");
                     break;
                 case TestResult.PERFECT:
-                    ConsoleWrite(result, ConsoleColor.Black, ConsoleColor.DarkCyan);
+                    AnsiConsole.MarkupLine("[black on aqua]PERFECT[/]");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(testResult));
             }
-            Console.WriteLine();
         }
     }
 }

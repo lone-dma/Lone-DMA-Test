@@ -28,7 +28,6 @@ namespace LoneDMATest.Misc
         public static void SetHighPerformanceMode()
         {
             Process.GetCurrentProcess().PriorityClass = ProcessPriorityClass.High;
-            Thread.CurrentThread.Priority = ThreadPriority.Highest;
             SetThreadExecutionState(EXECUTION_STATE.ES_CONTINUOUS | EXECUTION_STATE.ES_SYSTEM_REQUIRED);
             if (PowerGetActiveScheme(IntPtr.Zero, out IntPtr pActivePolicyGuid) == 0)
             {
