@@ -1,6 +1,8 @@
-﻿namespace LoneDMATest.Tests.Results
+﻿using Spectre.Console;
+
+namespace LoneDMATest.Tests.Results
 {
-    public readonly struct LatencyTestResults
+    public sealed class LatencyTestResults : IResult
     {
         private readonly long _count;
         private readonly long _failed;
@@ -8,14 +10,14 @@
         private readonly TimeSpan _min;
         private readonly TimeSpan _max;
 
-        private readonly double AvgReadSeconds => _testDuration.TotalSeconds / (double)Success;
-        public readonly long Success => _count - _failed;
-        public readonly int TotalLatency => (int)Math.Round(1f / AvgReadSeconds);
-        public readonly int FastestRead => (int)Math.Round(_min.TotalMicroseconds);
-        public readonly int SlowestRead => (int)Math.Round(_max.TotalMicroseconds);
-        private readonly int AvgRead => (int)Math.Round(_testDuration.TotalMicroseconds / (double)Success);
-        public readonly double PercentFailed => ((double)_failed / (double)_count) * 100f;
-        public readonly TestResult Result
+        private double AvgReadSeconds => _testDuration.TotalSeconds / (double)Success;
+        public long Success => _count - _failed;
+        public int TotalLatency => (int)Math.Round(1f / AvgReadSeconds);
+        public int FastestRead => (int)Math.Round(_min.TotalMicroseconds);
+        public int SlowestRead => (int)Math.Round(_max.TotalMicroseconds);
+        private int AvgRead => (int)Math.Round(_testDuration.TotalMicroseconds / (double)Success);
+        public double PercentFailed => ((double)_failed / (double)_count) * 100f;
+        public TestResult Result
         {
             get
             {
@@ -45,16 +47,16 @@
             _max = max;
         }
 
-        public readonly void Print()
+        public void Print()
         {
-            Console.WriteLine();
-            ConsoleWriteLine($"== Latency Test Results (4kB Reads) ==\n" +
-                $"Total Read Latency: {TotalLatency.ToString("n0")}/sec\n" +
-                $"Total Reads: {_count.ToString("n0")}\n" +
-                $"Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n" +
-                $"Fastest Read: {FastestRead.ToString("n0")} μs\n" +
-                $"Slowest Read: {SlowestRead.ToString("n0")} μs\n" +
-                $"Average Read: {AvgRead.ToString("n0")} μs\n", ConsoleColor.Cyan);
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine($"[cyan]== Latency Test Results (4kB Reads) ==[/]\n" +
+                $"[cyan]Total Read Latency: {TotalLatency.ToString("n0")}\\/sec[/]\n" +
+                $"[cyan]Total Reads: {_count.ToString("n0")}[/]\n" +
+                $"[cyan]Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n[/]" +
+                $"[cyan]Fastest Read: {FastestRead.ToString("n0")} μs[/]\n" +
+                $"[cyan]Slowest Read: {SlowestRead.ToString("n0")} μs[/]\n" +
+                $"[cyan]Average Read: {AvgRead.ToString("n0")} μs\n[/]");
             Result.Print();
         }
     }

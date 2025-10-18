@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Spectre.Console;
+using System.Diagnostics;
 using System.Text;
 using VmmSharpEx;
 using VmmSharpEx.Options;
@@ -48,8 +49,7 @@ namespace LoneDMATest.DMA
                 string[] mapArgs = { "-memmap", "mmap.txt" };
                 args = args.Concat(mapArgs).ToArray();
             }
-            ConsoleWriteLine($"[i] Vmm Version: {_vmmVersion}\n" +
-                $"[i] Leechcore Version: {_leechcoreVersion}", ConsoleColor.Cyan);
+            AnsiConsole.MarkupLine($"[cyan][[i]] Vmm Version: {Markup.Escape(_vmmVersion)}[/]\n[cyan][[i]] Leechcore Version: {Markup.Escape(_leechcoreVersion)}[/]");
             _vmm = new Vmm(args)
             {
                 EnableMemoryWriting = false
@@ -62,7 +62,7 @@ namespace LoneDMATest.DMA
             {
                 _vmm.Log("WARNING: TINY PCIe TLP algo auto-selected!", Vmm.LogLevel.Warning);
             }
-            ConsoleWriteLine("[OK] DMA Initialization", ConsoleColor.Black, ConsoleColor.Green);
+            AnsiConsole.MarkupLine("[black on green][[OK]] DMA Initialization[/]");
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace LoneDMATest.DMA
         /// </summary>
         public void GetMemoryMap()
         {
-            ConsoleWriteLine("[i] Retrieving Physical Memory Map...", ConsoleColor.Cyan);
+            AnsiConsole.MarkupLine("[cyan][[i]] Retrieving Physical Memory Map...[/]");
             var map = _vmm.Map_GetPhysMem();
             if (map.Length == 0)
                 throw new InvalidOperationException("Failed to retrieve Physical Memory Map!");
@@ -101,8 +101,8 @@ namespace LoneDMATest.DMA
                     .Append($" - {(map[i].pa + map[i].cb - 1).ToString("x")}")
                     .AppendLine();
             }
-            ConsoleWriteLine(sb.ToString(), ConsoleColor.Green);
-            ConsoleWriteLine("[OK] Memory Map", ConsoleColor.Black, ConsoleColor.Green);
+            AnsiConsole.MarkupLine($"[green]{Markup.Escape(sb.ToString())}[/]");
+            AnsiConsole.MarkupLine("[black on green][[OK]] Memory Map[/]");
         }
 
         /// <summary>

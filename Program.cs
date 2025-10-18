@@ -1,9 +1,10 @@
-﻿global using static LoneDMATest.Misc.ConsoleInterop;
-using LoneDMATest;
+﻿using LoneDMATest;
 using LoneDMATest.DMA;
 using LoneDMATest.Misc;
 using LoneDMATest.Tests;
+using Spectre.Console;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
 
 [assembly: AssemblyVersion("3.0.*")]
@@ -22,61 +23,75 @@ namespace LoneDMATest
 
         static Program() => Init(ref _mutex);
 
-        static void Main() => PromptUser();
+        static void Main() => RunMenuLoop();
 
-        private static void PromptUser()
+        private static void RunMenuLoop()
         {
             string version = Assembly.GetExecutingAssembly()!.GetName()!.Version!.ToString();
+
             while (true)
             {
-                Console.Clear();
-                ConsoleWriteLine($"=========================\n" +
-                    $"{Program.Name}\n" +
-                    $"Version {version}\n" +
-                    "=========================", ConsoleColor.Cyan);
-                Console.WriteLine();
-                ConsoleWriteLine("[?] Make a selection:\n\n" +
-                    "1. Full Test (Recommended)\n" +
-                    "2. Latency Test\n" +
-                    "3. Throughput Test\n" +
-                    "4. Options\n" +
-                    "5. Exit", ConsoleColor.Cyan);
-                var key = Console.ReadKey(true).Key;
-                ParseKeyInput(key);
+                AnsiConsole.Clear();
+                RenderHeader(version);
+
+                var choice = AnsiConsole.Prompt(
+                    new SelectionPrompt<string>()
+                        .Title("[cyan][[?]] Make a selection[/]")
+                        .PageSize(10)
+                        .HighlightStyle(new Style(Color.Black, Color.Aqua, Decoration.Bold))
+                        .AddChoices(new[]
+                        {
+                            "Full Test (Recommended)",
+                            "Latency Test",
+                            "Throughput Test",
+                            "Options",
+                            "Exit"
+                        }));
+
+                try
+                {
+                    Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                    GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
+                    switch (choice)
+                    {
+                        case "Full Test (Recommended)":
+                            FullTest.Instance.RunStandalone();
+                            break;
+                        case "Latency Test":
+                            LatencyTest.Instance.RunStandalone();
+                            break;
+                        case "Throughput Test":
+                            ThroughputTest.Instance.RunStandalone();
+                            break;
+                        case "Options":
+                            Options.ChangeOptions();
+                            break;
+                        case "Exit":
+                            Environment.Exit(0);
+                            break;
+                    }
+                }
+                finally
+                {
+                    Thread.CurrentThread.Priority = ThreadPriority.Normal;
+                    GCSettings.LatencyMode = GCLatencyMode.Interactive;
+                    GC.Collect();
+                    AnsiConsole.MarkupLine("[grey]Press any key to return to menu...[/]");
+                    Console.ReadKey(true);
+                }
             }
         }
 
-        private static void ParseKeyInput(ConsoleKey key)
+        private static void RenderHeader(string version)
         {
-            try
-            {
-                if (key == ConsoleKey.D1 || key == ConsoleKey.NumPad1)
-                {
-                    FullTest.RunStandalone();
-                }
-                else if (key == ConsoleKey.D2 || key == ConsoleKey.NumPad2)
-                {
-                    LatencyTest.RunStandalone();
-                }
-                else if (key == ConsoleKey.D3 || key == ConsoleKey.NumPad3)
-                {
-                    ThroughputTest.RunStandalone();
-                }
-                else if (key == ConsoleKey.D4 || key == ConsoleKey.NumPad4)
-                {
-                    Options.ChangeOptions();
-                }
-                else if (key == ConsoleKey.D5 || key == ConsoleKey.NumPad5)
-                {
-                    Environment.Exit(0);
-                }
-                else
-                    ConsoleWriteLine("Invalid selection!", ConsoleColor.Black, ConsoleColor.Red);
-            }
-            finally
-            {
-                ConsolePause();
-            }
+            var title = new FigletText(Name)
+                .Centered()
+                .Color(Color.Aqua);
+            AnsiConsole.Write(title);
+
+            AnsiConsole.MarkupLine($"[gray]Version {version}[/]");
+            AnsiConsole.Write(new Rule().RuleStyle("grey").Centered());
+            AnsiConsole.WriteLine();
         }
 
         private static void Init(ref Mutex mutex)
@@ -92,8 +107,9 @@ namespace LoneDMATest
             }
             catch (Exception ex)
             {
-                ConsoleWriteLine($"[STARTUP FAIL] {ex.Message}", ConsoleColor.Black, ConsoleColor.Red);
-                ConsolePause();
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex.Message}")}[/]");
+                AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
+                Console.ReadKey(true);
                 throw;
             }
         }

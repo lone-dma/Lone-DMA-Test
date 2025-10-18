@@ -1,28 +1,36 @@
-﻿using LoneDMATest.DMA;
+﻿using Spectre.Console;
+using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace LoneDMATest.Tests
 {
-    internal static class ThroughputTest
+    public sealed class ThroughputTest : ITest
     {
+        /// <summary>
+        /// Singleton Instance of <see cref="ThroughputTest"/>.
+        /// </summary>
+        internal static ITest Instance { get; } = new ThroughputTest();
         public const uint BytesPerRead = 0x1000000;
+
+        private ThroughputTest() { }
+
         /// <summary>
         /// Run Throughput Test in a standalone manner.
         /// </summary>
-        public static void RunStandalone()
+        public void RunStandalone()
         {
             try
             {
-                Console.Clear();
+                AnsiConsole.Clear();
                 using var dma = new DmaConnection();
                 dma.GetMemoryMap();
                 Run(dma, TimeSpan.FromSeconds(15)).Print();
             }
             catch (Exception ex)
             {
-                ConsoleWriteLine($"[FAIL] {ex.Message}", ConsoleColor.Black, ConsoleColor.Red);
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[FAIL] {ex.Message}")}[/]");
             }
         }
 
@@ -31,9 +39,9 @@ namespace LoneDMATest.Tests
         /// </summary>
         /// <param name="dma">DMA Connection instance.</param>
         /// <returns>Test results.</returns>
-        public static ThroughputTestResults Run(DmaConnection dma, TimeSpan testDuration)
+        public IResult Run(DmaConnection dma, TimeSpan testDuration)
         {
-            ConsoleWriteLine($"[i] Running Throughput Test for {testDuration.TotalSeconds.ToString("n0")} seconds...", ConsoleColor.Cyan);
+            AnsiConsole.MarkupLine($"[cyan][[i]] Running Throughput Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages(
                 pageCount: 1000, 
                 minimumContiguousMemoryLength: BytesPerRead);
@@ -50,8 +58,8 @@ namespace LoneDMATest.Tests
                         failedCount++;
                     totalCount++;
                 }
-                ConsoleWriteLine("[OK] Throughput Test", ConsoleColor.Black, ConsoleColor.Green);
-                return new(totalCount, failedCount, testDuration);
+                AnsiConsole.MarkupLine("[black on green][[OK]] Throughput Test[/]");
+                return new ThroughputTestResults(totalCount, failedCount, testDuration);
             }
             finally
             {
