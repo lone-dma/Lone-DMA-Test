@@ -90,6 +90,7 @@ namespace LoneDMATest
             AnsiConsole.Write(title);
 
             AnsiConsole.MarkupLine($"[gray]Version {version}[/]");
+            AnsiConsole.MarkupLine($"[gray]https://lone-dma.org/[/]");
             AnsiConsole.Write(new Rule().RuleStyle("grey").Centered());
             AnsiConsole.WriteLine();
         }
