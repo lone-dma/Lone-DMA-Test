@@ -1,15 +1,17 @@
-﻿namespace LoneDMATest.Tests.Results
+﻿using Spectre.Console;
+
+namespace LoneDMATest.Tests.Results
 {
-    public readonly struct ThroughputTestResults
+    public sealed class ThroughputTestResults : IResult
     {
         private readonly long _count;
         private readonly long _failed;
         private readonly TimeSpan _testDuration;
 
-        public readonly long Success => _count - _failed;
-        public readonly float PercentFailed => ((float)_failed / (float)_count) * 100f;
+        public long Success => _count - _failed;
+        public float PercentFailed => ((float)_failed / (float)_count) * 100f;
 
-        public readonly TestResult Result
+        public TestResult Result
         {
             get
             {
@@ -33,7 +35,7 @@
         /// <summary>
         /// Throughput in MB.
         /// </summary>
-        public readonly float Throughput
+        public float Throughput
         {
             get
             {
@@ -50,16 +52,16 @@
             _testDuration = testDuration;
         }
 
-        public readonly void Print()
+        public void Print()
         {
-            Console.WriteLine();
-            ConsoleWriteLine($"== Throughput Test Results (16MB Reads) ==\n" +
-                $"Total Read Throughput: {Throughput.ToString("n2")} MB/s\n" +
-                $"Total Reads: {_count.ToString("n0")}\n" +
-                $"Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n", ConsoleColor.Cyan);
+            AnsiConsole.WriteLine();
+            AnsiConsole.MarkupLine($"[cyan]== Throughput Test Results (16MB Reads) ==[/]\n" +
+                $"[cyan]Total Read Throughput: {Throughput.ToString("n2")} MB/s[/]\n" +
+                $"[cyan]Total Reads: {_count.ToString("n0")}[/]\n" +
+                $"[cyan]Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n[/]");
             if (Throughput < 45f)
             {
-                ConsoleWriteLine("[WARNING] Throughput indicates USB 2.0 Connection. Check port/cable/connection for issues.", ConsoleColor.Black, ConsoleColor.Yellow);
+                AnsiConsole.MarkupLine("[black on yellow][[WARNING]] Throughput indicates USB 2.0 Connection. Check port/cable/connection for issues.[/]");
             }
             Result.Print();
         }

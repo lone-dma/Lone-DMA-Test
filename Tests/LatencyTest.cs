@@ -1,22 +1,30 @@
 ﻿using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
+using Spectre.Console;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LoneDMATest.Tests
 {
-    internal static class LatencyTest
+    public sealed class LatencyTest : ITest
     {
+        /// <summary>
+        /// Singleton Instance of <see cref="LatencyTest"/>.
+        /// </summary>
+        internal static ITest Instance { get; } = new LatencyTest();
         public const uint BytesPerRead = 0x1000;
+
+        private LatencyTest() { }
 
         /// <summary>
         /// Run Latency Test in a standalone manner.
         /// </summary>
-        public static void RunStandalone()
+        public void RunStandalone()
         {
             try
             {
-                Console.Clear();
+                AnsiConsole.Clear();
                 var ts = TimeSpan.FromSeconds(30);
                 using var dma = new DmaConnection();
                 dma.GetMemoryMap();
@@ -24,7 +32,7 @@ namespace LoneDMATest.Tests
             }
             catch (Exception ex)
             {
-                ConsoleWriteLine($"[FAIL] {ex.Message}", ConsoleColor.Black, ConsoleColor.Red);
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[FAIL] {ex.Message}")}[/]");
             }
         }
 
@@ -34,9 +42,9 @@ namespace LoneDMATest.Tests
         /// <param name="dma">DMA Connection instance.</param>
         /// <param name="nSeconds">Number of seconds to run test.</param>
         /// <returns>Test results.</returns>
-        public static LatencyTestResults Run(DmaConnection dma, TimeSpan testDuration)
+        public IResult Run(DmaConnection dma, TimeSpan testDuration)
         {
-            ConsoleWriteLine($"[i] Running Latency Test for {testDuration.TotalSeconds.ToString("n0")} seconds...", ConsoleColor.Cyan);
+            AnsiConsole.MarkupLine($"[cyan][[i]] Running Latency Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages();
             var pb = new byte[BytesPerRead];
             var h = GCHandle.Alloc(pb, GCHandleType.Pinned);
@@ -65,8 +73,8 @@ namespace LoneDMATest.Tests
                     }
                     totalCount++;
                 }
-                ConsoleWriteLine("[OK] Latency Test", ConsoleColor.Black, ConsoleColor.Green);
-                return new(totalCount, failedCount, testDuration, minReadSpeed, maxReadSpeed);
+                AnsiConsole.MarkupLine("[black on green][[OK]] Latency Test[/]");
+                return new LatencyTestResults(totalCount, failedCount, testDuration, minReadSpeed, maxReadSpeed);
             }
             finally
             {
