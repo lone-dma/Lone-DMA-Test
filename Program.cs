@@ -15,7 +15,7 @@ using System.Text;
 
 namespace LoneDMATest
 {
-    internal static class Program
+    class Program
     {
         private const string _mutexID = "b9812694-f82a-4dee-a9eb-7daccbee7d02";
         internal const string Name = "Lone's DMA Test Tool";

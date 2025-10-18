@@ -1,6 +1,7 @@
 ﻿using Spectre.Console;
 using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
+using System.Runtime.CompilerServices;
 
 namespace LoneDMATest.Tests
 {
@@ -12,6 +13,7 @@ namespace LoneDMATest.Tests
         internal static ITest Instance { get; } = new FullTest();
 
         private FullTest() { }
+
         public void RunStandalone()
         {
             try

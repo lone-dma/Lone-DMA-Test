@@ -61,7 +61,7 @@ namespace LoneDMATest.Tests.Results
                 $"[cyan]Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n[/]");
             if (Throughput < 45f)
             {
-                AnsiConsole.MarkupLine("[black on yellow][WARNING] Throughput indicates USB 2.0 Connection. Check port/cable/connection for issues.[/]");
+                AnsiConsole.MarkupLine("[black on yellow][[WARNING]] Throughput indicates USB 2.0 Connection. Check port/cable/connection for issues.[/]");
             }
             Result.Print();
         }

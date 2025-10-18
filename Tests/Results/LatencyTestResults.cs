@@ -51,7 +51,7 @@ namespace LoneDMATest.Tests.Results
         {
             AnsiConsole.WriteLine();
             AnsiConsole.MarkupLine($"[cyan]== Latency Test Results (4kB Reads) ==[/]\n" +
-                $"[cyan]Total Read Latency: {TotalLatency.ToString("n0")}\\/sec[/]\n" +
+                $"[cyan]Total Read Latency: {TotalLatency.ToString("n0")}/sec[/]\n" +
                 $"[cyan]Total Reads: {_count.ToString("n0")}[/]\n" +
                 $"[cyan]Failed Reads: {_failed.ToString("n0")} ({PercentFailed.ToString("n2")}%)\n[/]" +
                 $"[cyan]Fastest Read: {FastestRead.ToString("n0")} μs[/]\n" +

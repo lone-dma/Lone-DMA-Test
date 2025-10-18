@@ -10,13 +10,12 @@ namespace LoneDMATest.DMA
     {
         private static readonly string _vmmVersion;
         private static readonly string _leechcoreVersion;
-        private readonly Vmm _vmm;
         private PMemPageEntry[] _paPages;
 
         /// <summary>
         /// Vmm Handle for this connection instance.
         /// </summary>
-        public Vmm Vmm => _vmm;
+        public Vmm Vmm { get; }
 
         static DmaConnection()
         {
@@ -50,17 +49,17 @@ namespace LoneDMATest.DMA
                 args = args.Concat(mapArgs).ToArray();
             }
             AnsiConsole.MarkupLine($"[cyan][[i]] Vmm Version: {Markup.Escape(_vmmVersion)}[/]\n[cyan][[i]] Leechcore Version: {Markup.Escape(_leechcoreVersion)}[/]");
-            _vmm = new Vmm(args)
+            Vmm = new Vmm(args)
             {
                 EnableMemoryWriting = false
             };
             if (mmap)
             {
-                _vmm.Log("WARNING: Memory Map Loaded", Vmm.LogLevel.Warning);
+                Vmm.Log("WARNING: Memory Map Loaded", Vmm.LogLevel.Warning);
             }
-            if (_vmm.LeechCore.GetOption(LcOption.FPGA_ALGO_TINY) is ulong tiny && tiny != 0)
+            if (Vmm.LeechCore.GetOption(LcOption.FPGA_ALGO_TINY) is ulong tiny && tiny != 0)
             {
-                _vmm.Log("WARNING: TINY PCIe TLP algo auto-selected!", Vmm.LogLevel.Warning);
+                Vmm.Log("WARNING: TINY PCIe TLP algo auto-selected!", Vmm.LogLevel.Warning);
             }
             AnsiConsole.MarkupLine("[black on green][[OK]] DMA Initialization[/]");
         }
@@ -71,7 +70,7 @@ namespace LoneDMATest.DMA
         public void GetMemoryMap()
         {
             AnsiConsole.MarkupLine("[cyan][[i]] Retrieving Physical Memory Map...[/]");
-            var map = _vmm.Map_GetPhysMem();
+            var map = Vmm.Map_GetPhysMem();
             if (map.Length == 0)
                 throw new InvalidOperationException("Failed to retrieve Physical Memory Map!");
             // Set the physical memory pages.
@@ -119,15 +118,14 @@ namespace LoneDMATest.DMA
                 .ToArray();
         }
 
-        #region IDisposable
-        private bool _disposed = false;
+
+        private bool _disposed;
         public void Dispose()
         {
-            if (_disposed)
-                return;
-            _vmm.Dispose();
-            _disposed = true;
+            if (Interlocked.Exchange(ref _disposed, true) == false)
+            {
+                Vmm.Dispose();
+            }
         }
-        #endregion
     }
 }
