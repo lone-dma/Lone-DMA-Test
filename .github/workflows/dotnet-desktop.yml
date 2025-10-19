@@ -23,18 +23,18 @@ jobs:
 
       - name: Dotnet Publish
         run: |
-          dotnet publish src/lone-dma-test.csproj \
-            -c Release \
-            -r win-x64 \
-            --self-contained \
-            /p:DebugType=full \
+          dotnet publish src/lone-dma-test.csproj `
+            -c Release `
+            -r win-x64 `
+            --self-contained `
+            /p:DebugType=full `
             -o out
-
+      
       - name: Archive publish output
         run: |
           cd out
-          zip -r ../lone-dma-test.zip .
-
+          Compress-Archive -Path . -DestinationPath "lone-dma-test.zip" -Force
+        
       - name: Upload to "latest" release (overwrite old asset)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
