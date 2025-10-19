@@ -33,7 +33,7 @@ jobs:
       - name: Archive publish output
         run: |
           cd out
-          Compress-Archive -Path . -DestinationPath "..\lone-dma-test.zip" -Force
+          Compress-Archive -Path * -DestinationPath "..\lone-dma-test.zip" -Force
         
       - name: Upload to "latest" release (overwrite old asset)
         env:
