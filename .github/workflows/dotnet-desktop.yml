@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   deploy:
+    environment: production
     runs-on: windows-latest
 
     steps:
