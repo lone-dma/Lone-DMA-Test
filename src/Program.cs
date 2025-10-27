@@ -21,7 +21,10 @@ namespace LoneDMATest
 
         private static void RunMenuLoop()
         {
-            string version = Assembly.GetExecutingAssembly()!.GetName()!.Version!.ToString();
+            string version = Assembly
+                .GetExecutingAssembly()!
+                .GetCustomAttribute<AssemblyFileVersionAttribute>()!
+                .Version!;
 
             while (true)
             {
