@@ -7,12 +7,6 @@ using System.Reflection;
 using System.Runtime;
 using System.Text;
 
-[assembly: AssemblyVersion("3.0.*")]
-[assembly: AssemblyTitle(Program.Name)]
-[assembly: AssemblyProduct(Program.Name)]
-[assembly: AssemblyCopyright("©2025 Lone")]
-[assembly: System.Runtime.Versioning.SupportedOSPlatform("Windows")]
-
 namespace LoneDMATest
 {
     class Program

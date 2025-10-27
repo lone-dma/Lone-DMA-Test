@@ -15,7 +15,9 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
 
       - name: Setup .NET 10 SDK
         uses: actions/setup-dotnet@v5
@@ -29,6 +31,9 @@ jobs:
             -r win-x64 `
             --self-contained `
             /p:DebugType=full `
+            /p:Version=${{ steps.nbgv.outputs.SimpleVersion }} `
+            /p:FileVersion=${{ steps.nbgv.outputs.BuildVersion }} `
+            /p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }} `
             -o out
       
       - name: Archive publish output

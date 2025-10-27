@@ -8,8 +8,6 @@
     <Nullable>warnings</Nullable>
     <Platforms>x64</Platforms>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	<Deterministic>False</Deterministic>
-	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  
 	<PublishAot>true</PublishAot>
 	<OptimizationPreference>Speed</OptimizationPreference>
