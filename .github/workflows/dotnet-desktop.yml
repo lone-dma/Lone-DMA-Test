@@ -31,8 +31,8 @@ jobs:
             -r win-x64 `
             --self-contained `
             /p:DebugType=full `
-            /p:Version=${{ steps.nbgv.outputs.SimpleVersion }} `
-            /p:FileVersion=${{ steps.nbgv.outputs.BuildVersion }} `
+            /p:Version=${{ steps.nbgv.outputs.SemVer2 }} `
+            /p:FileVersion=${{ steps.nbgv.outputs.AssemblyFileVersion }} `
             /p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }} `
             -o out
       
