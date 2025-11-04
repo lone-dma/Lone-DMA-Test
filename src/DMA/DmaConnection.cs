@@ -113,7 +113,7 @@ namespace LoneDMATest.DMA
         {
             ArgumentNullException.ThrowIfNull(_paPages, "No Physical Memory Pages to parse from. Please call GetMemoryMap() first.");
             return _paPages
-                .Where(page => page.RemainingBytesInSection >=  minimumContiguousMemoryLength)
+                .Where(page => page.RemainingBytesInSection >= minimumContiguousMemoryLength)
                 .Take(pageCount)
                 .ToArray();
         }

@@ -1,7 +1,6 @@
-﻿using Spectre.Console;
-using LoneDMATest.DMA;
+﻿using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
-using System.Runtime.CompilerServices;
+using Spectre.Console;
 
 namespace LoneDMATest.Tests
 {

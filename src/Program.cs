@@ -1,5 +1,4 @@
-﻿using LoneDMATest;
-using LoneDMATest.DMA;
+﻿using LoneDMATest.DMA;
 using LoneDMATest.Misc;
 using LoneDMATest.Tests;
 using Spectre.Console;
