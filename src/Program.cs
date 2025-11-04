@@ -6,6 +6,8 @@ using Spectre.Console;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
+using Velopack;
+using Velopack.Sources;
 
 namespace LoneDMATest
 {
@@ -17,7 +19,11 @@ namespace LoneDMATest
 
         static Program() => Init(ref _mutex);
 
-        static void Main() => RunMenuLoop();
+        static void Main()
+        {
+            CheckForUpdatesAsync().GetAwaiter().GetResult();
+            RunMenuLoop();
+        }
 
         private static void RunMenuLoop()
         {
@@ -96,6 +102,7 @@ namespace LoneDMATest
         {
             try
             {
+                VelopackApp.Build().Run();
                 Console.OutputEncoding = Encoding.Unicode;
                 mutex = new Mutex(true, _mutexID, out bool singleton);
                 if (!singleton)
@@ -132,6 +139,61 @@ namespace LoneDMATest
             {
                 if (!File.Exists(dep))
                     throw new FileNotFoundException($"Missing Dependency '{dep}'");
+            }
+        }
+
+        private static async Task CheckForUpdatesAsync()
+        {
+            try
+            {
+                var updater = new UpdateManager(
+                    source: new GithubSource(
+                        repoUrl: "https://github.com/lone-dma/Lone-DMA-Test",
+                        accessToken: null,
+                        prerelease: false));
+
+                if (!updater.IsInstalled)
+                    return;
+
+                UpdateInfo newVersion = null;
+                await AnsiConsole.Status()
+                    .Spinner(Spinner.Known.Dots)
+                    .SpinnerStyle(new Style(Color.Aqua))
+                    .StartAsync("Checking for updates...", async _ =>
+                    {
+                        newVersion = await updater.CheckForUpdatesAsync();
+                    });
+
+                if (newVersion is not null)
+                {
+                    AnsiConsole.MarkupLine(
+                        $"[green]A new version ([bold]{Markup.Escape(newVersion.TargetFullRelease.Version.ToString())}[/]) is available.[/]");
+
+                    bool doUpdate = AnsiConsole.Confirm("[cyan]Would you like to update now?[/]", defaultValue: false);
+
+                    if (doUpdate)
+                    {
+                        await AnsiConsole.Status()
+                            .Spinner(Spinner.Known.Dots)
+                            .SpinnerStyle(new Style(Color.Aqua))
+                            .StartAsync("Downloading update...", async _ =>
+                            {
+                                await updater.DownloadUpdatesAsync(newVersion);
+                            });
+
+                        AnsiConsole.MarkupLine("[grey]Applying update and restarting...[/]");
+                        updater.ApplyUpdatesAndRestart(newVersion);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[UPDATE ERROR] {ex}")}[/]");
+                Console.ReadKey(intercept: true);
+            }
+            finally
+            {
+                AnsiConsole.Clear();
             }
         }
     }
