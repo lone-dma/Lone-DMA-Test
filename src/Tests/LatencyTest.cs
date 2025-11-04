@@ -2,7 +2,6 @@
 using LoneDMATest.Tests.Results;
 using Spectre.Console;
 using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 namespace LoneDMATest.Tests

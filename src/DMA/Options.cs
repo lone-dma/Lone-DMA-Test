@@ -1,5 +1,4 @@
 ﻿using Spectre.Console;
-using LoneDMATest.Tests;
 
 namespace LoneDMATest.DMA
 {

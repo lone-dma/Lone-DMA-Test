@@ -1,6 +1,6 @@
-﻿using Spectre.Console;
-using LoneDMATest.DMA;
+﻿using LoneDMATest.DMA;
 using LoneDMATest.Tests.Results;
+using Spectre.Console;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -43,7 +43,7 @@ namespace LoneDMATest.Tests
         {
             AnsiConsole.MarkupLine($"[cyan][[i]] Running Throughput Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages(
-                pageCount: 1000, 
+                pageCount: 1000,
                 minimumContiguousMemoryLength: BytesPerRead);
             var pb = new byte[BytesPerRead];
             var h = GCHandle.Alloc(pb, GCHandleType.Pinned);
