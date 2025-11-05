@@ -5,6 +5,7 @@ using Spectre.Console;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
+using System.Threading;
 using Velopack;
 using Velopack.Sources;
 
@@ -16,7 +17,26 @@ namespace LoneDMATest
         internal const string Name = "Lone's DMA Test Tool";
         private static readonly Mutex _mutex;
 
-        static Program() => Init(ref _mutex);
+        static Program()
+        {
+            try
+            {
+                VelopackApp.Build().Run();
+                Console.OutputEncoding = Encoding.Unicode;
+                _mutex = new Mutex(true, _mutexID, out bool singleton);
+                if (!singleton)
+                    throw new InvalidOperationException("This Application is already running!");
+                PerformanceInterop.SetHighPerformanceMode();
+                VerifyDependencies();
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex.Message}")}[/]");
+                AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
+                Console.ReadKey(true);
+                throw;
+            }
+        }
 
         static void Main()
         {
@@ -95,27 +115,6 @@ namespace LoneDMATest
             AnsiConsole.MarkupLine($"[gray]https://lone-dma.org/[/]");
             AnsiConsole.Write(new Rule().RuleStyle("grey").Centered());
             AnsiConsole.WriteLine();
-        }
-
-        private static void Init(ref Mutex mutex)
-        {
-            try
-            {
-                VelopackApp.Build().Run();
-                Console.OutputEncoding = Encoding.Unicode;
-                mutex = new Mutex(true, _mutexID, out bool singleton);
-                if (!singleton)
-                    throw new InvalidOperationException("This Application is already running!");
-                PerformanceInterop.SetHighPerformanceMode();
-                VerifyDependencies();
-            }
-            catch (Exception ex)
-            {
-                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex.Message}")}[/]");
-                AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
-                Console.ReadKey(true);
-                throw;
-            }
         }
 
         /// <summary>
