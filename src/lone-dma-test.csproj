@@ -7,6 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>warnings</Nullable>
     <Platforms>x64</Platforms>
+	<ApplicationIcon>..\lone-icon.ico</ApplicationIcon>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  
 	<PublishAot>true</PublishAot>

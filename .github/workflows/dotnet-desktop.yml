@@ -69,6 +69,7 @@ jobs:
             --packDir "out" `
             --mainExe "lone-dma-test.exe" `
             --packTitle "Lone's DMA Test Tool" `
+            --icon "lone-icon.ico"
 
       - name: Upload to GitHub Releases
         env:
