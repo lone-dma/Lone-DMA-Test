@@ -5,7 +5,6 @@ using Spectre.Console;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
-using System.Threading;
 using Velopack;
 using Velopack.Sources;
 
@@ -27,7 +26,6 @@ namespace LoneDMATest
                 if (!singleton)
                     throw new InvalidOperationException("This Application is already running!");
                 PerformanceInterop.SetHighPerformanceMode();
-                VerifyDependencies();
             }
             catch (Exception ex)
             {
@@ -115,29 +113,6 @@ namespace LoneDMATest
             AnsiConsole.MarkupLine($"[gray]https://lone-dma.org/[/]");
             AnsiConsole.Write(new Rule().RuleStyle("grey").Centered());
             AnsiConsole.WriteLine();
-        }
-
-        /// <summary>
-        /// Validates that all startup dependencies are present.
-        /// </summary>
-        private static void VerifyDependencies()
-        {
-            var dependencies = new List<string>()
-            {
-                "vmm.dll",
-                "leechcore.dll",
-                "FTD3XX.dll",
-                "symsrv.dll",
-                "dbghelp.dll",
-                "vcruntime140.dll",
-                "tinylz4.dll"
-            };
-
-            foreach (var dep in dependencies)
-            {
-                if (!File.Exists(dep))
-                    throw new FileNotFoundException($"Missing Dependency '{dep}'");
-            }
         }
 
         private static async Task CheckForUpdatesAsync()
