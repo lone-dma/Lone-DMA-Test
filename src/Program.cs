@@ -31,7 +31,7 @@ namespace LoneDMATest
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex.Message}")}[/]");
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex}")}[/]");
                 AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
                 Console.ReadKey(true);
                 throw;
