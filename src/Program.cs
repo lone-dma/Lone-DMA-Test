@@ -2,6 +2,7 @@
 using LoneDMATest.Misc;
 using LoneDMATest.Tests;
 using Spectre.Console;
+using System;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
@@ -30,8 +31,7 @@ namespace LoneDMATest
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex}")}[/]");
-                AnsiConsole.MarkupLine("[grey]Press any key to continue...[/]");
-                Console.ReadKey(true);
+                Utilities.ConsolePause();
                 throw;
             }
         }
@@ -96,8 +96,7 @@ namespace LoneDMATest
                     Thread.CurrentThread.Priority = ThreadPriority.Normal;
                     GCSettings.LatencyMode = GCLatencyMode.Interactive;
                     GC.Collect();
-                    AnsiConsole.MarkupLine("[grey]Press any key to return to menu...[/]");
-                    Console.ReadKey(true);
+                    Utilities.ConsolePause();
                 }
             }
         }
@@ -162,7 +161,7 @@ namespace LoneDMATest
             catch (Exception ex)
             {
                 AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[UPDATE ERROR] {ex}")}[/]");
-                Console.ReadKey(intercept: true);
+                Utilities.ConsolePause();
             }
             finally
             {
