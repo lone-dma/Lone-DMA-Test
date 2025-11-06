@@ -25,20 +25,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="FTD3XXDriver_WHQLCertified_1.3.0.10_Installer.exe" />
-    <None Remove="README.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="FTD3XXDriver_WHQLCertified_1.3.0.10_Installer.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="README.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.52.0" />
     <PackageReference Include="Velopack" Version="0.0.1298" />
     <PackageReference Include="VmmSharpEx" Version="3.80.9422.367" />
