@@ -68,10 +68,10 @@ namespace LoneDMATest
                             "Exit"
                         }));
 
+                Thread.CurrentThread.Priority = ThreadPriority.Highest;
+                GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                 try
                 {
-                    Thread.CurrentThread.Priority = ThreadPriority.Highest;
-                    GCSettings.LatencyMode = GCLatencyMode.SustainedLowLatency;
                     switch (choice)
                     {
                         case "Full Test (Recommended)":
