@@ -34,9 +34,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Spectre.Console" Version="0.52.0" />
+    <PackageReference Include="Spectre.Console" Version="0.53.0" />
     <PackageReference Include="Velopack" Version="0.0.1298" />
-    <PackageReference Include="VmmSharpEx" Version="3.80.9422.367" />
+    <PackageReference Include="VmmSharpEx" Version="3.90.12" />
   </ItemGroup>
 	
 </Project>
