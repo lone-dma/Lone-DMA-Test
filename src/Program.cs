@@ -2,7 +2,6 @@
 using LoneDMATest.Misc;
 using LoneDMATest.Tests;
 using Spectre.Console;
-using System;
 using System.Reflection;
 using System.Runtime;
 using System.Text;
@@ -38,7 +37,7 @@ namespace LoneDMATest
 
         static void Main()
         {
-            CheckForUpdatesAsync().GetAwaiter().GetResult();
+            _ = Task.Run(CheckForUpdatesAsync); // Run continuations on the threadpool
             RunMenuLoop();
         }
 
@@ -127,45 +126,30 @@ namespace LoneDMATest
                 if (!updater.IsInstalled)
                     return;
 
-                UpdateInfo newVersion = null;
-                await AnsiConsole.Status()
-                    .Spinner(Spinner.Known.Dots)
-                    .SpinnerStyle(new Style(Color.Aqua))
-                    .StartAsync("Checking for updates...", async _ =>
-                    {
-                        newVersion = await updater.CheckForUpdatesAsync();
-                    });
+                var newVersion = await updater.CheckForUpdatesAsync();
 
                 if (newVersion is not null)
                 {
-                    AnsiConsole.MarkupLine(
-                        $"[green]A new version ([bold]{Markup.Escape(newVersion.TargetFullRelease.Version.ToString())}[/]) is available.[/]");
+                    var prompt = Win32.MessageBox(
+                        hWnd: IntPtr.Zero,
+                        lpText: $"A new version ({newVersion.TargetFullRelease.Version}) is available.\n\nWould you like to update now?",
+                        lpCaption: Program.Name,
+                        uType: Win32.MessageBoxFlags.MB_YESNO | Win32.MessageBoxFlags.MB_ICONQUESTION | Win32.MessageBoxFlags.MB_SETFOREGROUND | Win32.MessageBoxFlags.MB_TOPMOST);
 
-                    bool doUpdate = AnsiConsole.Confirm("[cyan]Would you like to update now?[/]", defaultValue: false);
-
-                    if (doUpdate)
+                    if (prompt == Win32.MessageBoxResult.IDYES)
                     {
-                        await AnsiConsole.Status()
-                            .Spinner(Spinner.Known.Dots)
-                            .SpinnerStyle(new Style(Color.Aqua))
-                            .StartAsync("Downloading update...", async _ =>
-                            {
-                                await updater.DownloadUpdatesAsync(newVersion);
-                            });
-
-                        AnsiConsole.MarkupLine("[grey]Applying update and restarting...[/]");
+                        await updater.DownloadUpdatesAsync(newVersion);
                         updater.ApplyUpdatesAndRestart(newVersion);
                     }
                 }
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[UPDATE ERROR] {ex}")}[/]");
-                Utilities.ConsolePause();
-            }
-            finally
-            {
-                AnsiConsole.Clear();
+                _ = Win32.MessageBox(
+                    IntPtr.Zero,
+                    $"An unhandled exception occurred while checking for updates: {ex}",
+                    Program.Name,
+                    uType: Win32.MessageBoxFlags.MB_OK | Win32.MessageBoxFlags.MB_ICONERROR | Win32.MessageBoxFlags.MB_SETFOREGROUND | Win32.MessageBoxFlags.MB_TOPMOST);
             }
         }
     }
