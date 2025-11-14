@@ -41,13 +41,13 @@ namespace LoneDMATest.Tests
         /// <param name="dma">DMA Connection instance.</param>
         /// <param name="nSeconds">Number of seconds to run test.</param>
         /// <returns>Test results.</returns>
-        public IResult Run(DmaConnection dma, TimeSpan testDuration)
+        public unsafe IResult Run(DmaConnection dma, TimeSpan testDuration)
         {
             AnsiConsole.MarkupLine($"[cyan][[i]] Running Latency Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages();
-            var buffer = new byte[BytesPerRead];
-            var h = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            var pb = h.AddrOfPinnedObject();
+            var pb = NativeMemory.AlignedAlloc(
+                byteCount: BytesPerRead,
+                alignment: 0x1000);
             try
             {
                 long totalCount = 0;
@@ -59,7 +59,10 @@ namespace LoneDMATest.Tests
                 while (testSW.Elapsed < testDuration)
                 {
                     readSW.Restart();
-                    if (dma.Vmm.LeechCore.Read(pages[Random.Shared.Next(pages.Length)].PageBase, pb, BytesPerRead))
+                    if (dma.Vmm.LeechCore.Read(
+                        pa: pages[Random.Shared.Next(pages.Length)].PageBase, 
+                        pb: pb, 
+                        cb: BytesPerRead))
                     {
                         var speed = readSW.Elapsed;
                         if (speed < minReadSpeed)
@@ -78,7 +81,7 @@ namespace LoneDMATest.Tests
             }
             finally
             {
-                h.Free();
+                NativeMemory.AlignedFree(pb);
             }
         }
     }
