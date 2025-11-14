@@ -10,13 +10,26 @@ namespace LoneDMATest.Tests.Results
         private readonly TimeSpan _min;
         private readonly TimeSpan _max;
 
-        private double AvgReadSeconds => _testDuration.TotalSeconds / (double)Success;
-        public long Success => _count - _failed;
-        public int TotalLatency => (int)Math.Round(1f / AvgReadSeconds);
-        public int FastestRead => (int)Math.Round(_min.TotalMicroseconds);
-        public int SlowestRead => (int)Math.Round(_max.TotalMicroseconds);
-        private int AvgRead => (int)Math.Round(_testDuration.TotalMicroseconds / (double)Success);
-        public double PercentFailed => ((double)_failed / (double)_count) * 100f;
+        private long Success => _count - _failed;
+
+        private double AvgReadSeconds =>
+            Success == 0 ? 0.0 : _testDuration.TotalSeconds / Success;
+
+        private int TotalLatency =>
+            AvgReadSeconds <= 0 ? 0 : (int)Math.Round(1.0 / AvgReadSeconds);
+
+        private int FastestRead =>
+            (int)Math.Round(_min.TotalMicroseconds);
+
+        private int SlowestRead =>
+            (int)Math.Round(_max.TotalMicroseconds);
+
+        private int AvgRead =>
+            Success == 0 ? 0 : (int)Math.Round(_testDuration.TotalMicroseconds / Success);
+
+        private double PercentFailed =>
+            _count == 0 ? 0.0 : (_failed / (double)_count) * 100.0;
+
         public TestResult Result
         {
             get

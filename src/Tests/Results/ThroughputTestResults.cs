@@ -8,8 +8,9 @@ namespace LoneDMATest.Tests.Results
         private readonly long _failed;
         private readonly TimeSpan _testDuration;
 
-        public long Success => _count - _failed;
-        public float PercentFailed => ((float)_failed / (float)_count) * 100f;
+        private long Success => _count - _failed;
+        private float PercentFailed =>
+            _count == 0 ? 0f : (_failed / (float)_count) * 100f;
 
         public TestResult Result
         {
@@ -40,10 +41,12 @@ namespace LoneDMATest.Tests.Results
             get
             {
                 ulong bytesRead = (ulong)Success * ThroughputTest.BytesPerRead;
-                var mbRead = (int)(((double)bytesRead / 1024d) / 1024d);
-                return (float)((float)mbRead / _testDuration.TotalSeconds);
+
+                double mbPerSec = bytesRead / 1024d / 1024d / _testDuration.TotalSeconds;
+                return (float)mbPerSec;
             }
         }
+
 
         public ThroughputTestResults(long count, long failed, TimeSpan testDuration)
         {
