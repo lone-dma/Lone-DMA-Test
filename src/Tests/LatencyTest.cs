@@ -60,8 +60,8 @@ namespace LoneDMATest.Tests
                 {
                     readSW.Restart();
                     if (dma.Vmm.LeechCore.Read(
-                        pa: pages[Random.Shared.Next(pages.Length)].PageBase, 
-                        pb: pb, 
+                        pa: pages[Random.Shared.Next(pages.Length)].PageBase,
+                        pb: pb,
                         cb: BytesPerRead))
                     {
                         var speed = readSW.Elapsed;
