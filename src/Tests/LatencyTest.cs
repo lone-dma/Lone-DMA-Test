@@ -45,8 +45,9 @@ namespace LoneDMATest.Tests
         {
             AnsiConsole.MarkupLine($"[cyan][[i]] Running Latency Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages();
-            var pb = new byte[BytesPerRead];
-            var h = GCHandle.Alloc(pb, GCHandleType.Pinned);
+            var buffer = new byte[BytesPerRead];
+            var h = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pb = h.AddrOfPinnedObject();
             try
             {
                 long totalCount = 0;
@@ -58,7 +59,7 @@ namespace LoneDMATest.Tests
                 while (testSW.Elapsed < testDuration)
                 {
                     readSW.Restart();
-                    if (dma.Vmm.LeechCore.ReadSpan(pages[Random.Shared.Next(pages.Length)].PageBase, pb.AsSpan()))
+                    if (dma.Vmm.LeechCore.Read(pages[Random.Shared.Next(pages.Length)].PageBase, pb, BytesPerRead))
                     {
                         var speed = readSW.Elapsed;
                         if (speed < minReadSpeed)
