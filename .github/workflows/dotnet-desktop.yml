@@ -47,7 +47,8 @@ jobs:
             -c Release `
             -r win-x64 `
             --self-contained `
-            /p:DebugType=none `
+            /p:DebugType=None `
+            /p:DebugSymbols=false `
             /p:Version=${{ steps.nbgv.outputs.SemVer2 }} `
             /p:FileVersion=${{ steps.nbgv.outputs.AssemblyFileVersion }} `
             /p:AssemblyVersion=${{ steps.nbgv.outputs.AssemblyVersion }} `

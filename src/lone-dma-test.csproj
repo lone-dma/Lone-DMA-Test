@@ -10,9 +10,12 @@
 	<ApplicationIcon>..\lone-icon.ico</ApplicationIcon>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  
-	<PublishAot>true</PublishAot>
-	<OptimizationPreference>Speed</OptimizationPreference>
-	<CetCompat>false</CetCompat>
+	  <PublishAot>true</PublishAot>
+	  <HighEntropyVA>true</HighEntropyVA>
+	  <OptimizationPreference>Speed</OptimizationPreference>
+	  <CetCompat>false</CetCompat>
+	  <DebuggerSupport>false</DebuggerSupport>
+	  <StackTraceSupport>false</StackTraceSupport>
 	<AssemblyName>$(MSBuildProjectName)</AssemblyName>
   </PropertyGroup>
 
