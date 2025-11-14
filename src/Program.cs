@@ -113,6 +113,7 @@ namespace LoneDMATest
         {
             try
             {
+
                 var updater = new UpdateManager(
                     source: new GithubSource(
                         repoUrl: "https://github.com/lone-dma/Lone-DMA-Test",
@@ -130,7 +131,7 @@ namespace LoneDMATest
                         hWnd: IntPtr.Zero,
                         lpText: $"A new version ({newVersion.TargetFullRelease.Version}) is available.\n\nWould you like to update now?",
                         lpCaption: Program.Name,
-                        uType: Win32.MessageBoxFlags.MB_YESNO | Win32.MessageBoxFlags.MB_ICONQUESTION | Win32.MessageBoxFlags.MB_SETFOREGROUND | Win32.MessageBoxFlags.MB_TOPMOST);
+                        uType: Win32.MessageBoxFlags.MB_YESNO | Win32.MessageBoxFlags.MB_ICONQUESTION | Win32.MessageBoxFlags.MB_DEFAULT_DESKTOP_ONLY);
 
                     if (prompt == Win32.MessageBoxResult.IDYES)
                     {
@@ -145,7 +146,7 @@ namespace LoneDMATest
                     IntPtr.Zero,
                     $"An unhandled exception occurred while checking for updates: {ex}",
                     Program.Name,
-                    uType: Win32.MessageBoxFlags.MB_OK | Win32.MessageBoxFlags.MB_ICONERROR | Win32.MessageBoxFlags.MB_SETFOREGROUND | Win32.MessageBoxFlags.MB_TOPMOST);
+                    uType: Win32.MessageBoxFlags.MB_OK | Win32.MessageBoxFlags.MB_ICONERROR | Win32.MessageBoxFlags.MB_DEFAULT_DESKTOP_ONLY);
             }
         }
     }
