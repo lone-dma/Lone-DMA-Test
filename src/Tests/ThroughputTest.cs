@@ -39,15 +39,15 @@ namespace LoneDMATest.Tests
         /// </summary>
         /// <param name="dma">DMA Connection instance.</param>
         /// <returns>Test results.</returns>
-        public IResult Run(DmaConnection dma, TimeSpan testDuration)
+        public unsafe IResult Run(DmaConnection dma, TimeSpan testDuration)
         {
             AnsiConsole.MarkupLine($"[cyan][[i]] Running Throughput Test for {testDuration.TotalSeconds.ToString("n0")} seconds...[/]");
             var pages = dma.GetPhysMemPages(
                 pageCount: 1000,
                 minimumContiguousMemoryLength: BytesPerRead);
-            var buffer = new byte[BytesPerRead];
-            var h = GCHandle.Alloc(buffer, GCHandleType.Pinned);
-            var pb = h.AddrOfPinnedObject();
+            var pb = NativeMemory.AlignedAlloc(
+                byteCount: BytesPerRead,
+                alignment: 0x1000);
             try
             {
                 long totalCount = 0;
@@ -55,8 +55,13 @@ namespace LoneDMATest.Tests
                 var testSW = Stopwatch.StartNew();
                 while (testSW.Elapsed < testDuration)
                 {
-                    if (!dma.Vmm.LeechCore.Read(pages[Random.Shared.Next(pages.Length)].PageBase, pb, BytesPerRead))
+                    if (!dma.Vmm.LeechCore.Read(
+                        pa: pages[Random.Shared.Next(pages.Length)].PageBase,
+                        pb: pb,
+                        cb: BytesPerRead))
+                    {
                         failedCount++;
+                    }
                     totalCount++;
                 }
                 AnsiConsole.MarkupLine("[black on green][[OK]] Throughput Test[/]");
@@ -64,7 +69,7 @@ namespace LoneDMATest.Tests
             }
             finally
             {
-                h.Free();
+                NativeMemory.AlignedFree(pb);
             }
         }
     }
