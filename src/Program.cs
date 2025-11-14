@@ -14,31 +14,27 @@ namespace LoneDMATest
     {
         private const string _mutexID = "b9812694-f82a-4dee-a9eb-7daccbee7d02";
         internal const string Name = "Lone's DMA Test Tool";
-        private static readonly Mutex _mutex;
+        private static Mutex _mutex;
 
-        static Program()
+        static void Main()
         {
+            VelopackApp.Build().Run();
             try
             {
-                VelopackApp.Build().Run();
                 Console.OutputEncoding = Encoding.Unicode;
                 _mutex = new Mutex(true, _mutexID, out bool singleton);
                 if (!singleton)
                     throw new InvalidOperationException("This Application is already running!");
+                _ = Task.Run(CheckForUpdatesAsync); // Run continuations on the threadpool
                 PerformanceInterop.SetHighPerformanceMode();
+                RunMenuLoop();
             }
             catch (Exception ex)
             {
-                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[STARTUP FAIL] {ex}")}[/]");
+                AnsiConsole.MarkupLine($"[black on red]{Markup.Escape($"[UNHANDLED EXCEPTION] {ex}")}[/]");
                 Utilities.ConsolePause();
                 throw;
             }
-        }
-
-        static void Main()
-        {
-            _ = Task.Run(CheckForUpdatesAsync); // Run continuations on the threadpool
-            RunMenuLoop();
         }
 
         private static void RunMenuLoop()
