@@ -45,8 +45,9 @@ namespace LoneDMATest.Tests
             var pages = dma.GetPhysMemPages(
                 pageCount: 1000,
                 minimumContiguousMemoryLength: BytesPerRead);
-            var pb = new byte[BytesPerRead];
-            var h = GCHandle.Alloc(pb, GCHandleType.Pinned);
+            var buffer = new byte[BytesPerRead];
+            var h = GCHandle.Alloc(buffer, GCHandleType.Pinned);
+            var pb = h.AddrOfPinnedObject();
             try
             {
                 long totalCount = 0;
@@ -54,7 +55,7 @@ namespace LoneDMATest.Tests
                 var testSW = Stopwatch.StartNew();
                 while (testSW.Elapsed < testDuration)
                 {
-                    if (!dma.Vmm.LeechCore.ReadSpan(pages[Random.Shared.Next(pages.Length)].PageBase, pb.AsSpan()))
+                    if (!dma.Vmm.LeechCore.Read(pages[Random.Shared.Next(pages.Length)].PageBase, pb, BytesPerRead))
                         failedCount++;
                     totalCount++;
                 }
