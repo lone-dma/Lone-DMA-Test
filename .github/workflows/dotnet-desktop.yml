@@ -62,12 +62,10 @@ jobs:
         uses: dotnet/nbgv@master
         id: nbgv
 
-      - name: Setup .NET SDKs
+      - name: Setup .NET SDK
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: |
-            8.0.x
-            10.0.x
+          dotnet-version: "10.0.x"
 
       - name: Install Velopack CLI
         run: dotnet tool install -g vpk
