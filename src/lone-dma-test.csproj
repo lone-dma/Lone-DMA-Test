@@ -39,7 +39,7 @@
   <ItemGroup>
     <PackageReference Include="Spectre.Console" Version="0.54.0" />
     <PackageReference Include="Velopack" Version="0.0.1298" />
-    <PackageReference Include="VmmSharpEx" Version="3.130.1" />
+    <PackageReference Include="VmmSharpEx" Version="3.140.2" />
   </ItemGroup>
 	
 </Project>
