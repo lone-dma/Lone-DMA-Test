@@ -25,11 +25,10 @@ namespace LoneDMATest.DMA
 
         public DmaConnection()
         {
-            var algo = Options.FpgaAlgo;
+            string deviceStr = Options.DeviceStr;
             string[] args = new string[] {
                 "-device",
-                algo is FpgaAlgo.Auto ?
-                    "fpga" : $"fpga://algo={(int)algo}",
+                deviceStr,
                 "-norefresh",
                 "-waitinitialize"};
             var loggingLevel = Options.LoggingLevel;
@@ -70,9 +69,7 @@ namespace LoneDMATest.DMA
         public void GetMemoryMap()
         {
             AnsiConsole.MarkupLine("[cyan][[i]] Retrieving Physical Memory Map...[/]");
-            var map = Vmm.Map_GetPhysMem();
-            if (map.Length == 0)
-                throw new InvalidOperationException("Failed to retrieve Physical Memory Map!");
+            var map = Vmm.Map_GetPhysMem() ?? throw new InvalidOperationException("Failed to retrieve Physical Memory Map!");
             // Set the physical memory pages.
             var paList = new List<PMemPageEntry>();
             foreach (var pMapEntry in map)
