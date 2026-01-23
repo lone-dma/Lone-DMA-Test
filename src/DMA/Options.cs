@@ -4,7 +4,7 @@ namespace LoneDMATest.DMA
 {
     internal static class Options
     {
-        public static FpgaAlgo FpgaAlgo = FpgaAlgo.Auto;
+        public static string DeviceStr = "fpga";
         public static FpgaLoggingLevel LoggingLevel = FpgaLoggingLevel.Verbose;
 
         /// <summary>
@@ -14,20 +14,26 @@ namespace LoneDMATest.DMA
         {
             AnsiConsole.Clear();
 
-            var algo = AnsiConsole.Prompt(
-                new SelectionPrompt<FpgaAlgo>()
-                    .Title("[cyan][[?]] Select an FPGA Algorithm[/]")
+            var deviceStr = AnsiConsole.Prompt(
+                new SelectionPrompt<string>()
+                    .Title("[cyan][[?]] Select Device Connection String[/]")
                     .PageSize(10)
                     .AddChoices(new[]
                     {
-                        FpgaAlgo.Auto,
-                        FpgaAlgo.AsyncNormal,
-                        FpgaAlgo.AsyncTiny,
-                        FpgaAlgo.OldNormal,
-                        FpgaAlgo.OldTiny
+                        "default (fpga)",
+                        "custom"
                     }));
-            FpgaAlgo = algo;
-            AnsiConsole.MarkupLine($"[black on green]FPGA Algo Set to {Markup.Escape(algo.ToString())}[/]\n");
+            switch (deviceStr)
+            {
+                case "default (fpga)":
+                    deviceStr = "fpga";
+                    break;
+                case "custom":
+                    deviceStr = AnsiConsole.Ask<string>("[cyan][[?]] Enter custom Device Connection string:[/]");
+                    break;
+            }
+            DeviceStr = deviceStr;
+            AnsiConsole.MarkupLine($"[black on green]Device Connection String set to {Markup.Escape(deviceStr.ToString())}[/]\n");
 
             var logLevel = AnsiConsole.Prompt(
                 new SelectionPrompt<FpgaLoggingLevel>()
