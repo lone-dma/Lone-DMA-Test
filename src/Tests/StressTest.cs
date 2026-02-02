@@ -44,6 +44,7 @@ namespace LoneDMATest.Tests
             AnsiConsole.MarkupLine("[cyan][[i]] Running Stress Test on 8 Threads...[/]");
             long totalCount = 0;
             long failedCount = 0;
+            int activeThreads = 0;
             var pages = dma.GetPhysMemPages(
                 pageCount: 1500,
                 minimumContiguousMemoryLength: BytesPerRead).ToArray();
@@ -57,6 +58,7 @@ namespace LoneDMATest.Tests
                     var pb = NativeMemory.AlignedAlloc(
                         byteCount: BytesPerRead,
                         alignment: 0x1000);
+                    Interlocked.Increment(ref activeThreads);
                     try
                     {
                         while (!ct.IsCancellationRequested)
@@ -73,6 +75,7 @@ namespace LoneDMATest.Tests
                     }
                     finally
                     {
+                        Interlocked.Decrement(ref activeThreads);
                         NativeMemory.AlignedFree(pb);
                     }
                 })
@@ -83,20 +86,14 @@ namespace LoneDMATest.Tests
             }
             // Wait for user to press q
             AnsiConsole.MarkupLine("[yellow]Press 'Q' to stop the stress test...[/]");
-            while (true)
-            {
-                if (Console.KeyAvailable)
-                {
-                    var key = Console.ReadKey(intercept: true);
-                    if (key.Key == ConsoleKey.Q)
-                    {
-                        break;
-                    }
-                }
-                Thread.Sleep(50);
-            }
+            while (Console.ReadKey(intercept: true).Key is not ConsoleKey.Q)
+                Thread.Yield();
+            // Stop the test and wait for threads to exit
+            AnsiConsole.MarkupLine("[cyan][[i]] Ending test...[/]");
             sw.Stop();
             cts.Cancel();
+            while (activeThreads > 0)
+                Thread.Sleep(1);
             return new StressTestResult(totalCount, failedCount, sw.Elapsed);
         }
     }
