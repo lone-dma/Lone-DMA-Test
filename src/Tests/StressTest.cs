@@ -85,7 +85,7 @@ namespace LoneDMATest.Tests
                 }.Start();
             }
             // Wait for user to press q
-            AnsiConsole.MarkupLine("[yellow]Press 'Q' to stop the stress test...[/]");
+            AnsiConsole.MarkupLine("[yellow]Press 'Q' to stop the stress test[/]");
             while (Console.ReadKey(intercept: true).Key is not ConsoleKey.Q)
                 Thread.Yield();
             // Stop the test and wait for threads to exit
@@ -93,7 +93,7 @@ namespace LoneDMATest.Tests
             sw.Stop();
             cts.Cancel();
             while (activeThreads > 0)
-                Thread.Sleep(1);
+                Thread.Sleep(0);
             return new StressTestResult(totalCount, failedCount, sw.Elapsed);
         }
     }
