@@ -59,6 +59,7 @@ namespace LoneDMATest
                             "Full Test (Recommended)",
                             "Latency Test",
                             "Throughput Test",
+                            "Stress Test",
                             "Options",
                             "Exit"
                         }));
@@ -77,6 +78,9 @@ namespace LoneDMATest
                             break;
                         case "Throughput Test":
                             ThroughputTest.Instance.RunStandalone();
+                            break;
+                        case "Stress Test":
+                            StressTest.Instance.RunStandalone();
                             break;
                         case "Options":
                             Options.ChangeOptions();
