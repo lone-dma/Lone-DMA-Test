@@ -45,9 +45,7 @@ namespace LoneDMATest.Tests
                 throw new InvalidOperationException($"Unable to locate process {processTarget}!");
             AnsiConsole.MarkupLine($"[green][[i]] Process {Markup.Escape(processTarget)} running @ PID {pid}[/]");
             AnsiConsole.MarkupLine("[cyan][[i]] Attempting to enumerate process modules...[/]");
-            var modules = dma.Vmm.Map_GetModule(pid, false);
-            if (modules.Length == 0)
-                throw new InvalidOperationException($"No Modules located for {processTarget}!");
+            var modules = dma.Vmm.Map_GetModule(pid, false) ?? throw new InvalidOperationException($"No Modules located for {processTarget}!");
             foreach (var module in modules)
                 AnsiConsole.MarkupLine($"[green][[i]] {Markup.Escape(module.sText)} @ 0x{module.vaBase.ToString("x")}[/]");
             AnsiConsole.MarkupLine("[black on green][[OK]] Process Lookup[/]");
