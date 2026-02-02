@@ -49,6 +49,7 @@ namespace LoneDMATest.Tests
                 minimumContiguousMemoryLength: BytesPerRead).ToArray();
             using var cts = new CancellationTokenSource();
             var ct = cts.Token;
+            var sw = Stopwatch.StartNew();
             for (int i = 0; i < 8; i++)
             {
                 new Thread(() =>
@@ -94,8 +95,9 @@ namespace LoneDMATest.Tests
                 }
                 Thread.Sleep(50);
             }
+            sw.Stop();
             cts.Cancel();
-            return new StressTestResult(totalCount, failedCount);
+            return new StressTestResult(totalCount, failedCount, sw.Elapsed);
         }
     }
 }
